@@ -1,5 +1,5 @@
 module Quotes
-  ( Quote
+  ( Quote(Quote)
   , fromStrings
   , wrapQuotes
   )
@@ -34,3 +34,5 @@ wrapQuotes [] = []
 wrapQuotes ((Quote id t a _ _):xs) = 
     "<p>id " ++ id ++ "<p>текст: " ++ t ++ "<p>автор: " ++ a 
     ++ "<p>" ++ wrapQuotes xs
+
+

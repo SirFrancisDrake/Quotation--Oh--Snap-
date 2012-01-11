@@ -22,12 +22,21 @@ password = "password=" ++ "mrshudson" -- password shouldn't be kept like that
 rHost = R.localhost
 rPort = R.defaultPort
 
+connectToPostgres :: IO Connection
+connectToPostgres = do
+    connectPostgreSQL $ join $ intersperse " " [host, db, login, password]
+
 fetchQuotes :: IO [Quote]
 fetchQuotes = do
-    connection <- connectPostgreSQL $ join $ intersperse " " [host, db, login, password]
+    connection <- connectToPostgres
     select <- prepare connection "SELECT * FROM quotes"
     execute select []
     parseQuotes <$> fetchAllRows select
+    disconnect connection
+
+insertQuote :: Quote -> IO ()
+insertQuote = do
+    connection <- connectToPostgres
 
 -- adding a quote to PostgreSQL base shouldn't be complicated
 -- same applies to redis

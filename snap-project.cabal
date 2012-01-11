@@ -28,6 +28,7 @@ Executable snap-project
     HDBC-postgresql >= 2,
     MonadCatchIO-transformers >= 0.2.1 && < 0.3,
     mtl >= 2 && < 3,
+    redis >= 0.10,
     snap == 0.7.*,
     snap-core   == 0.7.*,
     snap-server == 0.7.*,

@@ -63,6 +63,13 @@
   (major1) == 2 && (major2) <  0 || \
   (major1) == 2 && (major2) == 0 && (minor) <= 1)
 
+/* package redis-0.11 */
+#define VERSION_redis "0.11"
+#define MIN_VERSION_redis(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  11 || \
+  (major1) == 0 && (major2) == 11 && (minor) <= 0)
+
 /* package snap-0.7 */
 #define VERSION_snap "0.7"
 #define MIN_VERSION_snap(major1,major2,minor) (\
