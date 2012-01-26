@@ -7,10 +7,12 @@ import Database.HDBC.PostgreSQL (connectPostgreSQL)
 import qualified Database.Redis.Redis as R
 import qualified Data.ByteString as B
 import Data.List (intersperse)
+import Data.Maybe (isJust, fromJust)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 
 import Quotes
+import SqlQuotes
 
 -- PostgreSQL login information
 host     = "host="     ++ "localhost"
@@ -22,7 +24,6 @@ password = "password=" ++ "mrshudson" -- password shouldn't be kept like that
 rHost = R.localhost
 rPort = R.defaultPort
 
-connectToPostgres :: IO Connection
 connectToPostgres = do
     connectPostgreSQL $ join $ intersperse " " [host, db, login, password]
 
@@ -31,12 +32,20 @@ fetchQuotes = do
     connection <- connectToPostgres
     select <- prepare connection "SELECT * FROM quotes"
     execute select []
-    parseQuotes <$> fetchAllRows select
+    quotes <- parseQuotes <$> fetchAllRows select
     disconnect connection
+    return quotes
 
-insertQuote :: Quote -> IO ()
-insertQuote = do
-    connection <- connectToPostgres
+insertQuote :: Quote -> IO String -- String as in ``debug message''. FIXME
+insertQuote q = do
+    let query = safeQuoteAddQuery q
+    if isJust query then do connection <- connectToPostgres
+                            insert <- prepare connection (fromJust query)
+                            execute insert []
+                            commit connection
+                            disconnect connection
+                            return "Quote inserted, ok."
+                    else return "Quote failed"
 
 -- adding a quote to PostgreSQL base shouldn't be complicated
 -- same applies to redis

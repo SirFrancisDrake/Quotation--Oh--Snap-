@@ -18,6 +18,9 @@ import Snap.Snaplet.Heist
 data App = App
     { _heist :: Snaplet (Heist App)
     , _startTime :: UTCTime
+    , _authLens :: Snaplet (AuthManager App)
+    , _sessLens :: Snaplet SessionManager
+    , _dbLens :: Snaplet (HdbcSnaplet Connection IO)
     }
 
 type AppHandler = Handler App App

@@ -26,13 +26,17 @@ instance Eq Quote where
 instance Ord Quote where
     (>) = on (>) q_id
 
+qmap :: (String -> String) -> Quote -> Quote
+qmap fn = fromStrings . (map fn) . toStrings
+
+toStrings :: Quote -> [String]
+toStrings (Quote a b c d e) = [a,b,c,d,e]
+
 fromStrings :: [String] -> Quote
 fromStrings (a:b:c:d:e:[]) = Quote a b c d e
 
 wrapQuotes :: [Quote] -> String
-wrapQuotes [] = []
-wrapQuotes ((Quote id t a _ _):xs) = 
-    "<p>id " ++ id ++ "<p>текст: " ++ t ++ "<p>автор: " ++ a 
-    ++ "<p>" ++ wrapQuotes xs
-
-
+wrapQuotes = concatMap wrapQuote
+             where wrapQuote (Quote id t a _ _) = 
+                    "<p>id " ++ id ++ "<p>текст: " ++ t ++ "<p>автор: " ++ a 
+                    ++ "<p>"

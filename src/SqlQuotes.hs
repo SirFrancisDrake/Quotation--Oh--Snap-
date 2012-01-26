@@ -9,7 +9,6 @@ module SqlQuotes
 
 import Control.Monad (join)
 import Data.List (intersperse)
-import Database.HDBC hiding (fromSql) -- see comment in Site.hs
 
 import Quotes
 import SqlUtils (screenQuotes)

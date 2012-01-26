@@ -1,4 +1,4 @@
-module SQLUtils
+module SqlUtils
   ( screenQuotes
   )
   where
